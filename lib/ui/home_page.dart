@@ -1,73 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:timedance/bloc/cities_bloc.dart';
 import 'package:timedance/ui/cities_page.dart';
+import 'package:timedance/ui/widgets/homevacioscreen_widget.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
 
-  void handleNavegationPress(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) => CitiesPage()));
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final bloc = CitiesBloc();
+
+  void handleNavegationPress(BuildContext context) async {
+    await Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => CitiesPage()));
+  }
+
+  @override
+  void initState() {
+    bloc.loadCities();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          Positioned.fill(
-            child: Image.asset('assets/images/welcome.jpg'),
-          ),
-          SafeArea(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: 230.0,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 50,
-                    ),
-                    Image.asset(
-                      'assets/images/logo.png',
-                      height: 60,
-                    ),
-                    SizedBox(
-                      height: 55,
-                    ),
-                    Text(
-                      "Hola, \nBienvenido",
-                      textAlign: TextAlign.start,
-                      style:
-                          TextStyle(fontSize: 46, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      "¿Qué te parece si agregamos \nuna nueva ciudad?",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    SizedBox(
-                      height: 100,
-                    ),
-                    RaisedButton(
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Text("Agregar ciudad"),
-                      onPressed: () => handleNavegationPress(context),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    return AnimatedBuilder(
+        animation: bloc,
+        builder: (context, child) {
+          return Scaffold(
+            body: bloc.cities.isEmpty
+                ? HomeScreenVacioWidget(
+                    onTap: () => handleNavegationPress(context))
+                : Center(
+                    child: Text('no se duerman'),
+                  ),
+          );
+        });
   }
 }
