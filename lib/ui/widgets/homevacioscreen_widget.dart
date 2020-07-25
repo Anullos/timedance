@@ -12,7 +12,10 @@ class HomeScreenVacioWidget extends StatelessWidget {
       fit: StackFit.expand,
       children: <Widget>[
         Positioned.fill(
-          child: Image.asset('assets/images/welcome.jpg'),
+          child: Image.asset(
+            'assets/images/welcome.jpg',
+            fit: BoxFit.cover,
+          ),
         ),
         SafeArea(
           child: Center(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timedance/bloc/cities_bloc.dart';
 import 'package:timedance/ui/cities_page.dart';
+import 'package:timedance/ui/widgets/homeclimascreen_widget.dart';
 import 'package:timedance/ui/widgets/homevacioscreen_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,6 +17,7 @@ class _HomePageState extends State<HomePage> {
   void handleNavegationPress(BuildContext context) async {
     await Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => CitiesPage()));
+    bloc.loadCities();
   }
 
   @override
@@ -33,9 +35,9 @@ class _HomePageState extends State<HomePage> {
             body: bloc.cities.isEmpty
                 ? HomeScreenVacioWidget(
                     onTap: () => handleNavegationPress(context))
-                : Center(
-                    child: Text('no se duerman'),
-                  ),
+                : HomeClimasScreenWidget(
+                    cities: bloc.cities,
+                    onTap: () => handleNavegationPress(context)),
           );
         });
   }
